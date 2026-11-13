@@ -36,13 +36,13 @@ df_clean = df.drop(
     errors="ignore"
 )
 
-    st.success("File uploaded successfully.")
+st.success("File uploaded successfully.")
 
-    st.subheader("Dataset Overview")
-    st.write(f"Rows: {df.shape[0]}")
-    st.write(f"Columns: {df.shape[1]}")
+st.subheader("Dataset Overview")
+st.write(f"Rows: {df.shape[0]}")
+st.write(f"Columns: {df.shape[1]}")
 
-    st.dataframe(df, use_container_width=True)
+st.dataframe(df, use_container_width=True)
 
-    st.subheader("Column Names")
-    st.write(df.columns.tolist())
+st.subheader("Column Names")
+st.write(df.columns.tolist())
