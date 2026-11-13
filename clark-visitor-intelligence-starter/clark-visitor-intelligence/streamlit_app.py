@@ -3,7 +3,6 @@ import pandas as pd
 
 st.set_page_config(
     page_title="Clark Visitor Intelligence",
-    page_icon="📊",
     layout="wide"
 )
 
@@ -18,31 +17,46 @@ uploaded_file = st.file_uploader(
 )
 
 if uploaded_file is not None:
+
+    # Load original dataset
     df = pd.read_excel(uploaded_file)
 
-# Remove unnecessary columns
-columns_to_drop = [
-    "Company Legal Name",
-    "Employees Range",
-    "ICP segments",
-    "Visitor email",
-    "Visitor name",
-    "Visitor ID (Google Analytics)",
-    "Ad Content (utm_content)"
-]
+    st.success("File uploaded successfully.")
 
-df_clean = df.drop(
-    columns=columns_to_drop,
-    errors="ignore"
-)
+    # Remove unnecessary columns
+    columns_to_drop = [
+        "Company Legal Name",
+        "Employees Range",
+        "ICP segments",
+        "Visitor email",
+        "Visitor name",
+        "Visitor ID (Google Analytics)",
+        "Ad Content (utm_content)"
+    ]
 
-st.success("File uploaded successfully.")
+    df_clean = df.drop(
+        columns=columns_to_drop,
+        errors="ignore"
+    ).copy()
 
-st.subheader("Dataset Overview")
-st.write(f"Rows: {df.shape[0]}")
-st.write(f"Columns: {df.shape[1]}")
+    # Convert mixed-type identifier columns to strings
+    for col in ["Company ID", "Visit ID", "Visitor ID (Leadfeeder)"]:
+        if col in df_clean.columns:
+            df_clean[col] = df_clean[col].astype("string")
 
-st.dataframe(df, use_container_width=True)
+    # Dataset overview
+    st.subheader("Dataset Overview")
 
-st.subheader("Column Names")
-st.write(df.columns.tolist())
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric("Total Records", len(df_clean))
+    col2.metric("Original Columns", df.shape[1])
+    col3.metric("Cleaned Columns", df_clean.shape[1])
+
+    # Display cleaned dataset
+    st.subheader("Cleaned Dataset")
+    st.dataframe(df_clean, width="stretch")
+
+    # Display column names
+    st.subheader("Remaining Columns")
+    st.write(df_clean.columns.tolist())
