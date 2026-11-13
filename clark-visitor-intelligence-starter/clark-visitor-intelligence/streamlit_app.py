@@ -94,3 +94,26 @@ if uploaded_file is not None:
     st.bar_chart(
         missing_report.set_index("Column")["Missing (%)"]
     )
+
+        # Analyze the relationship between Source and Medium
+    st.header("Traffic Source Analysis")
+
+    source_medium = (
+        df_clean.groupby(
+            ["Source", "Medium"],
+            dropna=False
+        )
+        .size()
+        .reset_index(name="Records")
+    )
+
+    source_medium = source_medium.sort_values(
+        by="Records",
+        ascending=False
+    )
+
+    st.dataframe(
+        source_medium,
+        width="stretch",
+        hide_index=True
+    )
