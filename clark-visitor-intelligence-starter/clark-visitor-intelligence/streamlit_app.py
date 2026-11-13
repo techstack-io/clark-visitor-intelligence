@@ -20,6 +20,22 @@ uploaded_file = st.file_uploader(
 if uploaded_file is not None:
     df = pd.read_excel(uploaded_file)
 
+# Remove unnecessary columns
+columns_to_drop = [
+    "Company Legal Name",
+    "Employees Range",
+    "ICP segments",
+    "Visitor email",
+    "Visitor name",
+    "Visitor ID (Google Analytics)",
+    "Ad Content (utm_content)"
+]
+
+df_clean = df.drop(
+    columns=columns_to_drop,
+    errors="ignore"
+)
+
     st.success("File uploaded successfully.")
 
     st.subheader("Dataset Overview")
