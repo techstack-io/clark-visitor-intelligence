@@ -60,3 +60,37 @@ if uploaded_file is not None:
     # Display column names
     st.subheader("Remaining Columns")
     st.write(df_clean.columns.tolist())
+
+        # Data profiling: missing values
+    st.header("Data Quality Analysis")
+
+    missing_count = df_clean.isna().sum()
+
+    missing_percent = (
+        df_clean.isna().mean() * 100
+    ).round(2)
+
+    missing_report = pd.DataFrame({
+        "Column": df_clean.columns,
+        "Missing Values": missing_count.values,
+        "Missing (%)": missing_percent.values
+    })
+
+    missing_report = missing_report.sort_values(
+        by="Missing (%)",
+        ascending=False
+    )
+
+    st.subheader("Missing Values by Column")
+
+    st.dataframe(
+        missing_report,
+        width="stretch",
+        hide_index=True
+    )
+
+    st.subheader("Missing Data Visualization")
+
+    st.bar_chart(
+        missing_report.set_index("Column")["Missing (%)"]
+    )
